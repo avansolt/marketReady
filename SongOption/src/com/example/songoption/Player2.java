@@ -98,7 +98,7 @@ public class Player2 extends Activity {
       
             //Get the bundle
             Bundle bundle = getIntent().getExtras();
-            //Extract the data…
+            //Extract the dataï¿½
             String idList = bundle.getString("idList"); 
             int seekto= bundle.getInt("start");
             int opt = bundle.getInt("option");
@@ -107,7 +107,7 @@ public class Player2 extends Activity {
    	    Cursor songCursor;
    	    
    	    if(locationSong.equals("playlist")){
-   			    //Extract the data…		  		    
+   			    //Extract the dataï¿½		  		    
    			    String[] proj1 = {MediaStore.Audio.Playlists.Members.TITLE, MediaStore.Audio.Playlists.Members.ARTIST, 
    			            MediaStore.Audio.Playlists.Members.DURATION, "SourceId",MediaStore.Audio.Playlists.Members._ID};
    		
@@ -205,7 +205,7 @@ public class Player2 extends Activity {
             		 mediaPlayer2.stop();}
              };cntr_aCounter.start();
                
-         	handler1.postDelayed(timerRunnable, 5000); 
+         	handler1.postDelayed(timerRunnable, 60000); 
          }
          else{
          	mediaPlayer.stop(); 
@@ -231,7 +231,7 @@ public class Player2 extends Activity {
                     		artistname.setText(artist[currentTrack]);
                         	mediaPlayer.start();
                         	
-                        	handler1.postDelayed(timerRunnable, 6000); 
+                        	handler1.postDelayed(timerRunnable, 60000); 
                         	mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
