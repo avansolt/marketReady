@@ -88,7 +88,7 @@ public class Player2 extends Activity {
         	    		btn.setImageResource(R.drawable.playbutton);
                     }else{
                   	  mediaPlayer.start();
-                  	  handler1.postDelayed(timerRunnable, 5000); 
+                  	  handler1.postDelayed(timerRunnable, 60000); 
                   	  btn.setImageResource(R.drawable.pausebutton);
                  
                     }
