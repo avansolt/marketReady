@@ -1,6 +1,9 @@
 package com.example.songoption;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -21,7 +25,10 @@ public class MainActivity extends Activity {
 	
     
     long[] duration;
+    String playname [] = new String[100];
+    String playid [] = new String[100];
     String game;
+    int numberPlaylist=0;
 	String idList = null;
   
 	@Override
@@ -30,51 +37,88 @@ public class MainActivity extends Activity {
         // Create the superclass portion of the object.
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
-      
-        
-        
-        Button enter = (Button)findViewById(R.id.button2);     
-        enter.setOnClickListener(new View.OnClickListener() {
-   	 
-		      @Override
-		      public void onClick(View v) {
-		    	  PlaySongsFromAPlaylist();
-		            }
-		        });
-        
+      /*
+        Uri playlistUri = Uri.parse("content://com.google.android.music.MusicContent/playlists");
+        Cursor playlistCursor = getContentResolver().query(playlistUri, new String[] {"_id", "playlist_name" }, null, null, null);
+         
+        List<String> SpinnerArray =  new ArrayList<String>();
+        String playname [] = new String[100];
+        String playid [] = new String[100];
+         int i=0;
+         
+        if (playlistCursor.getCount() > 0){
+            playlistCursor.moveToFirst();
+            do {
+               String nameList = playlistCursor.getString(1);
+               SpinnerArray.add(nameList);
+               playname[i]=nameList;
+               
+               String playId= String.valueOf(playlistCursor.getLong(0));
+               playid[i]=playId;
+               i++;                
+             }while (playlistCursor.moveToNext());  
+            
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, SpinnerArray);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            Spinner Items = (Spinner) findViewById(R.id.Spinner2);
+            Items.setAdapter(adapter);
+  
+            playlistCursor.close();
+            
+            String selected = Items.getSelectedItem().toString();
+            for(int k=0; k<i; k++)
+            {
+            	if(selected.equals(playname))
+            	{
+            		idList= playid[k];
+            		
+            	}
+            }
+            
+         }
+       */
+        PlaySongsFromAPlaylist();
      }
 //---------------PLAYLIST- SPINNER IN HERE (DO-WHILE)-----------------------------------------------------------------------------------------------	
     public void PlaySongsFromAPlaylist(){ 
     	
     	Boolean found = false;
-    	EditText path = (EditText) findViewById(R.id.EditText01);
-        String name = path.getText().toString();
-    	
     	Uri playlistUri = Uri.parse("content://com.google.android.music.MusicContent/playlists");
         Cursor playlistCursor = getContentResolver().query(playlistUri, new String[] {"_id", "playlist_name" }, null, null, null);
-        
+         
+        List<String> SpinnerArray =  new ArrayList<String>();
+         
+         
         if (playlistCursor.getCount() > 0){
             playlistCursor.moveToFirst();
             do {
                String nameList = playlistCursor.getString(1);
-               Log.e("query", nameList);
-               Log.e("query", name);
-               idList= String.valueOf(playlistCursor.getLong(0));
-
-                if(name.equals(nameList))
-                { found =true;  break;}
+               SpinnerArray.add(nameList);
+               playname[numberPlaylist]=nameList;
+               
+               String playId= String.valueOf(playlistCursor.getLong(0));
+               playid[numberPlaylist]=playId;
+               numberPlaylist++;                
              }while (playlistCursor.moveToNext());  
             
-          playlistCursor.close();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, SpinnerArray);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            Spinner Items = (Spinner) findViewById(R.id.Spinner2);
+            Items.setAdapter(adapter);
+  
+            playlistCursor.close();
+            
+            
          }
  //------------END PLAYLIST OPTION---------------------------------------------------------------------------------------------------
 //------------------------------//PUT THE TWO OPTIONS HERE!!!!!!-----------------------------------------------------------------------------
-      if(found == true){      
+         
       
        Button option1 = (Button) findViewById(R.id.button1); 
        option1.setOnClickListener(new View.OnClickListener() {
     	      @Override
     	      public void onClick(View v) {
+    	    	  Spinner Items = (Spinner) findViewById(R.id.Spinner2);
     	    	  RadioButton songskip = (RadioButton) findViewById(R.id.radioButton1);
     	    	  RadioButton wholesong = (RadioButton) findViewById(R.id.radioButton2);
     	    	  RadioButton allsong = (RadioButton) findViewById(R.id.radioButton3);
@@ -85,8 +129,19 @@ public class MainActivity extends Activity {
     	    	  }
     	    	  else if(playlist.isChecked()){
     	    		 game ="playlist";
+    	    		 String selected = Items.getSelectedItem().toString();
+    	             
+    	             for(int k=0; k<numberPlaylist; k++)
+    	             {
+    	             	if(selected.equals(playname[k]))
+    	             	{
+    	             		idList= playid[k];
+    	             		  Log.e("found",playname[k]);
+    	             		
+    	             	}
+    	             }
     	    	  }
-    	    	  
+    	    	  Log.e("game",game);
     	    	  
     	    	  if(songskip.isChecked()){
     	    		  secondAct();  
@@ -100,13 +155,8 @@ public class MainActivity extends Activity {
     	    	  }   
                         	  
         }}); 
-      }
-      else{ 
-    	  Toast.makeText(getApplicationContext(),
-          "No Playlist Found", Toast.LENGTH_SHORT).show();
-    	  path.setText(null);
-    	  
-      }
+      
+      
       
    }//end of playSong
 
