@@ -39,6 +39,7 @@ public class Player2 extends Activity {
     long[] duration;
     long startTime = 0;
     int counter;
+    boolean stop =false; 
     double percent;
     TextView timerTextView;
     private int currentTrack = 0; 
@@ -73,6 +74,7 @@ public class Player2 extends Activity {
     			public void onClick(View v) {
     				mediaPlayer.stop();
     				mediaPlayer.release();
+    				stop =true;
     				handler1.removeCallbacks(timerRunnable);
     				finish();
     				
@@ -84,10 +86,12 @@ public class Player2 extends Activity {
         	    	ImageButton btn = (ImageButton) findViewById(R.id.imageButton1);
         	    	if (isPlaying) {
         	    		mediaPlayer.pause();
+        	    		stop=true;
         	    		handler1.removeCallbacks(timerRunnable);
         	    		btn.setImageResource(R.drawable.playbutton);
                     }else{
                   	  mediaPlayer.start();
+                  	  stop=false;
                   	  handler1.postDelayed(timerRunnable, 60000); 
                   	  btn.setImageResource(R.drawable.pausebutton);
                  
@@ -204,8 +208,8 @@ public class Player2 extends Activity {
             	 public void onFinish() {
             		 mediaPlayer2.stop();}
              };cntr_aCounter.start();
-               
-         	handler1.postDelayed(timerRunnable, 60000); 
+               if(stop ==false){
+         	handler1.postDelayed(timerRunnable, 60000); }
          }
          else{
          	mediaPlayer.stop(); 
